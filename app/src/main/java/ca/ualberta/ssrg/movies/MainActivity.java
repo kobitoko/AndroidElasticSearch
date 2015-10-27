@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import ca.ualberta.ssrg.androidelasticsearch.R;
@@ -71,25 +72,26 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		
-		
+		// we set up a new thread object which thread parameter *
 		SearchThread thread = new SearchThread("*");
 
+		// tells the OS to create an actual process, and call start! Android will call run in the Thread then.
 		thread.start();
-
-
 	}
 	
 	/** 
 	 * Called when the model changes
 	 */
 	public void notifyUpdated() {
-		// Thread to update adapter after an operation
+		// Thread to update adapter after an operation, a runnable.
 		Runnable doUpdateGUIList = new Runnable() {
 			public void run() {
 				moviesViewAdapter.notifyDataSetChanged();
 			}
 		};
-		
+
+		// pass this customized instance to android build in to put on queue in the UI thread.
+		// no race conditions that modifies data from standard JAVA collection. (unless you make your own collection).
 		runOnUiThread(doUpdateGUIList);
 	}
 
@@ -100,10 +102,18 @@ public class MainActivity extends Activity {
 	public void search(View view) {
 		movies.clear();
 
-		// TODO: Extract search query from text view
-		
-		// TODO: Run the search thread
-		
+        // TODO someday: Extract search query from text view
+        EditText txtbox = (EditText) findViewById(R.id.editText1);
+		String toSearch = txtbox.getText().toString();
+
+		// TODO someday: Run the search thread
+
+        // we set up a new thread object which thread parameter *
+        SearchThread thread = new SearchThread(toSearch);
+
+        // tells the OS to create an actual process, and call start! Android will call run in the Thread then.
+        thread.start();
+
 	}
 	
 	/**
@@ -134,6 +144,7 @@ public class MainActivity extends Activity {
 			this.search = search;
 		}
 
+		// android will call run() here.
 		@Override
 		public void run() {
 			movies.clear();

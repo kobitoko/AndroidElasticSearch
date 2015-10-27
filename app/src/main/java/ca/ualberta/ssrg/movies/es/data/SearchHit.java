@@ -6,6 +6,7 @@ public class SearchHit<T> {
 	private String _id;
 	private String _version;
 	private boolean found;
+	//what we really interested in:
 	private T _source;
 
 	public SearchHit() {
@@ -52,6 +53,7 @@ public class SearchHit<T> {
 		this.found = found;
 	}
 
+    //what we really interested in:
 	public T getSource() {
 		return _source;
 	}

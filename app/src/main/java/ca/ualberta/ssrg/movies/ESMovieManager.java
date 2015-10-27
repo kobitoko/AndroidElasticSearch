@@ -129,6 +129,9 @@ public class ESMovieManager {
 		SearchResponse<Movie> esResponse;
 
 		try {
+			//problem: this JSON doesn't just return movies, also returns the duration of search, number of hits etc.
+			// thus we have to deserialize our movie object and other java object that elastic search sends back.
+			// So we have gson deserialize it as searchResponseType (basically we construct java constructs that should match the names).
 			esResponse = gson.fromJson(
 					new InputStreamReader(response.getEntity().getContent()),
 					searchResponseType);
@@ -142,7 +145,7 @@ public class ESMovieManager {
 			throw new RuntimeException(e);
 		}
 
-
+        // Unwrap the hits to extract found movies:
 		for (SearchHit<Movie> hit : esResponse.getHits().getHits()) {
 			result.add(hit.getSource());
 		}
